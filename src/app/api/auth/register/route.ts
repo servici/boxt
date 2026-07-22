@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { prisma } from '@/lib/db';
 import { signToken, setAuthCookie } from '@/lib/auth';
+import { Role } from '@/types';
 import bcrypt from 'bcryptjs';
 
 export async function POST(req: NextRequest) {
@@ -22,7 +23,6 @@ export async function POST(req: NextRequest) {
 
     const passwordHash = await bcrypt.hash(password, 10);
 
-    // Give 50 starter coins to new registered users
     const user = await prisma.user.create({
       data: {
         email: email.toLowerCase(),
@@ -35,7 +35,7 @@ export async function POST(req: NextRequest) {
     const token = signToken({
       userId: user.id,
       email: user.email,
-      role: user.role,
+      role: user.role as Role,
     });
 
     setAuthCookie(token);
