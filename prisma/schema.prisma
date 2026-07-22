@@ -1,0 +1,95 @@
+datasource db {
+  provider = "sqlite"
+  url      = "file:./dev.db"
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+model User {
+  id           String         @id @default(uuid())
+  email        String         @unique
+  passwordHash String
+  name         String?
+  role         String         @default("USER") // "USER" or "ADMIN"
+  coinsBalance Int            @default(0)
+  createdAt    DateTime       @default(now())
+  updatedAt    DateTime       @updatedAt
+  unlocks      Unlock[]
+  purchases    Purchase[]
+  watchHistory WatchHistory[]
+
+  @@map("users")
+}
+
+model Series {
+  id          String    @id @default(uuid())
+  title       String
+  description String
+  coverImage  String
+  category    String
+  status      String    @default("ONGOING") // "ONGOING" or "COMPLETED"
+  viewsCount  Int       @default(0)
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+  episodes    Episode[]
+
+  @@map("series")
+}
+
+model Episode {
+  id            String         @id @default(uuid())
+  seriesId      String
+  series        Series         @relation(fields: [seriesId], references: [id], onDelete: Cascade)
+  episodeNumber Int
+  title         String?
+  videoUrl      String
+  isFree        Boolean        @default(false)
+  coinCost      Int            @default(10)
+  duration      Int            @default(60)
+  createdAt     DateTime       @default(now())
+  updatedAt     DateTime       @updatedAt
+  unlocks       Unlock[]
+  watchHistory  WatchHistory[]
+
+  @@unique([seriesId, episodeNumber])
+  @@map("episodes")
+}
+
+model Unlock {
+  id         String   @id @default(uuid())
+  userId     String
+  user       User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  episodeId  String
+  episode    Episode  @relation(fields: [episodeId], references: [id], onDelete: Cascade)
+  unlockedAt DateTime @default(now())
+
+  @@unique([userId, episodeId])
+  @@map("unlocks")
+}
+
+model Purchase {
+  id            String   @id @default(uuid())
+  userId        String
+  user          User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  amount        Float
+  coinsAdded    Int
+  paymentMethod String   @default("Manual / Stripe")
+  createdAt     DateTime @default(now())
+
+  @@map("purchases")
+}
+
+model WatchHistory {
+  id        String   @id @default(uuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  episodeId String
+  episode   Episode  @relation(fields: [episodeId], references: [id], onDelete: Cascade)
+  progress  Int      @default(0)
+  updatedAt DateTime @updatedAt
+
+  @@unique([userId, episodeId])
+  @@map("watch_history")
+}
