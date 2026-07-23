@@ -11,6 +11,7 @@ const config: OpenNextConfig = {
       queue: 'dummy',
     },
   },
+  buildCommand: 'npx prisma generate && npx next build',
   edgeExternals: ['node:crypto'],
   middleware: {
     external: true,
