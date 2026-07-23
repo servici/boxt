@@ -5,14 +5,12 @@ import { Play, Eye, Film, Lock, Unlock, Sparkles, Clock, CheckCircle } from 'luc
 import { Series, Episode } from '@/types';
 import { formatViews } from '@/lib/utils';
 import { getUserFromCookies } from '@/lib/auth';
+import { fetchSeriesById } from '@/lib/series-service';
 
 async function getSeriesDetail(id: string) {
-  const baseUrl = process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000';
   try {
-    const res = await fetch(`${baseUrl}/api/series/${id}`, { cache: 'no-store' });
-    if (!res.ok) return null;
-    const data = await res.json();
-    return data.series as Series & { episodes: Episode[] };
+    const series = await fetchSeriesById(id);
+    return series as Series & { episodes: Episode[] };
   } catch (err) {
     console.error('Error fetching series detail:', err);
     return null;

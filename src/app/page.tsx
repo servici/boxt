@@ -3,20 +3,12 @@ import Link from 'next/link';
 import { Play, Flame, Sparkles, Film, Search } from 'lucide-react';
 import SeriesCard from '@/components/SeriesCard';
 import { Series } from '@/types';
+import { fetchSeriesList } from '@/lib/series-service';
 
 async function getSeries(search?: string, category?: string) {
-  const baseUrl = process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000';
-  const params = new URLSearchParams();
-  if (search) params.set('search', search);
-  if (category && category !== 'All') params.set('category', category);
-
   try {
-    const res = await fetch(`${baseUrl}/api/series?${params.toString()}`, {
-      cache: 'no-store',
-    });
-    if (!res.ok) return [];
-    const data = await res.json();
-    return data.series as Series[];
+    const list = await fetchSeriesList(search, category);
+    return list as Series[];
   } catch (err) {
     console.error('Failed to fetch series on homepage:', err);
     return [];
