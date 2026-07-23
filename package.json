@@ -15,7 +15,7 @@
     "seed": "ts-node prisma/seed.ts"
   },
   "dependencies": {
-    "@prisma/client": "^5.10.0",
+    "@prisma/client": "^6.3.0",
     "bcryptjs": "^2.4.3",
     "canvas-confetti": "^1.9.4",
     "clsx": "^2.1.0",
@@ -29,7 +29,7 @@
     "tailwind-merge": "^2.2.1"
   },
   "devDependencies": {
-    "@opennextjs/cloudflare": "^0.6.6",
+    "@opennextjs/cloudflare": "^1.14.0",
     "@types/bcryptjs": "^2.4.6",
     "@types/canvas-confetti": "^1.9.0",
     "@types/jsonwebtoken": "^9.0.5",
@@ -40,7 +40,7 @@
     "eslint": "^8.57.0",
     "eslint-config-next": "^14.1.0",
     "postcss": "^8.4.35",
-    "prisma": "^5.10.0",
+    "prisma": "^6.3.0",
     "tailwindcss": "^3.4.1",
     "ts-node": "^10.9.2",
     "typescript": "^5.3.3"
